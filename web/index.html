@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon-96x96.png" sizes="96x96" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="shortcut icon" href="/favicon.ico" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon.png" />
+    <meta name="apple-mobile-web-app-title" content="Procedural Terrain Simulator" />
+    <link rel="manifest" href="/site.webmanifest" />
+    <title>Procedural Terrain Simulator</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <canvas id="canvas"></canvas>
+    <div id="settings-panel">
+        <div class="panel-header">
+            <span class="panel-title">Settings</span>
+            <button id="settings-toggle" title="Toggle (Tab)">×</button>
+        </div>
+        <div id="settings-content">
+            <!-- Generation Section -->
+            <details class="section" open>
+                <summary>Generation</summary>
+                <div class="section-content">
+                    <div class="setting-row">
+                        <label for="pattern-type">Pattern</label>
+                        <select id="pattern-type">
+                            <option value="0">Standard</option>
+                            <option value="1">Ridged</option>
+                            <option value="2">Islands</option>
+                            <option value="3">Valleys</option>
+                            <option value="4" selected>Terraced</option>
+                            <option value="5">Blocky</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="terrain-scale">Scale</label>
+                        <input type="range" id="terrain-scale" min="0.0005" max="0.05" step="0.0001">
+                        <span class="value-display" id="terrain-scale-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="height-scale">Height</label>
+                        <input type="range" id="height-scale" min="1" max="1501" step="5">
+                        <span class="value-display" id="height-scale-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="height-variance">Variance</label>
+                        <input type="range" id="height-variance" min="0" max="1" step="0.05">
+                        <span class="value-display" id="height-variance-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="octaves">Octaves</label>
+                        <input type="range" id="octaves" min="1" max="8" step="1">
+                        <span class="value-display" id="octaves-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="warp-strength">Warp</label>
+                        <input type="range" id="warp-strength" min="0" max="100" step="0.5">
+                        <span class="value-display" id="warp-strength-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="roughness">Roughness</label>
+                        <input type="range" id="roughness" min="0.1" max="0.9" step="0.01">
+                        <span class="value-display" id="roughness-value"></span>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Colors Section -->
+            <details class="section">
+                <summary>Colors</summary>
+                <div class="section-content">
+                    <div class="setting-row">
+                        <label for="color-theme">Theme</label>
+                        <select id="color-theme">
+                            <option value="natural">Islands</option>
+                            <option value="desert">Desert</option>
+                            <option value="arctic">Arctic</option>
+                            <option value="alien">Alien</option>
+                            <option value="volcanic">Volcanic</option>
+                            <option value="ink">Ink</option>
+                            <option value="chalk">Moon</option>
+                        </select>
+                    </div>
+                    <div class="color-grid">
+                        <div class="color-row">
+                            <label for="color-abyss">Abyss</label>
+                            <input type="color" id="color-abyss">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-deep-water">Deep Water</label>
+                            <input type="color" id="color-deep-water">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-shallow-water">Shallow Water</label>
+                            <input type="color" id="color-shallow-water">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-sand">Sand</label>
+                            <input type="color" id="color-sand">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-grass">Grass</label>
+                            <input type="color" id="color-grass">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-rock">Rock</label>
+                            <input type="color" id="color-rock">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-snow">Snow</label>
+                            <input type="color" id="color-snow">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-sky">Sky</label>
+                            <input type="color" id="color-sky">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-sky-top">Sky Top</label>
+                            <input type="color" id="color-sky-top">
+                        </div>
+                        <div class="color-row">
+                            <label for="color-sky-horizon">Horizon</label>
+                            <input type="color" id="color-sky-horizon">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Sky Objects Section -->
+            <details class="section">
+                <summary>Sky Objects</summary>
+                <div class="section-content">
+                    <div class="setting-row">
+                        <label for="sky-preset">Preset</label>
+                        <select id="sky-preset">
+                            <option value="none" selected>None</option>
+                            <option value="starry-night">Starry Night</option>
+                            <option value="dual-suns">Dual Suns</option>
+                            <option value="full-moon">Full Moon</option>
+                            <option value="clear-day">Clear Day</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="star-count">Stars</label>
+                        <input type="range" id="star-count" min="0" max="5000" step="50">
+                        <span class="value-display" id="star-count-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="sun-count">Suns</label>
+                        <input type="range" id="sun-count" min="0" max="100" step="1">
+                        <span class="value-display" id="sun-count-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="moon-count">Moons</label>
+                        <input type="range" id="moon-count" min="0" max="100" step="1">
+                        <span class="value-display" id="moon-count-value"></span>
+                    </div>
+                    <div class="color-grid">
+                        <div class="color-row">
+                            <label for="star-color">Star Color</label>
+                            <input type="color" id="star-color">
+                        </div>
+                        <div class="color-row">
+                            <label for="sun-color">Sun Color</label>
+                            <input type="color" id="sun-color">
+                        </div>
+                        <div class="color-row">
+                            <label for="moon-color">Moon Color</label>
+                            <input type="color" id="moon-color">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Weather Section -->
+            <details class="section" style="display: none">
+                <summary>Weather</summary>
+                <div class="section-content">
+                    <div class="setting-row" style="display: none">
+                        <label for="weather-preset">Preset</label>
+                        <select id="weather-preset">
+                            <option value="none" selected>None</option>
+                            <option value="light-rain">Light Rain</option>
+                            <option value="heavy-rain">Heavy Rain</option>
+                            <option value="drizzle">Drizzle</option>
+                            <option value="light-snow">Light Snow</option>
+                            <option value="heavy-snow">Heavy Snow</option>
+                            <option value="blizzard">Blizzard</option>
+                        </select>
+                    </div>
+                    <div class="setting-row">
+                        <label for="particle-density">Density</label>
+                        <input type="range" id="particle-density" min="0" max="2" step="0.1">
+                        <span class="value-display" id="particle-density-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="particle-speed">Speed</label>
+                        <input type="range" id="particle-speed" min="5" max="50" step="1">
+                        <span class="value-display" id="particle-speed-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="wind-x">Wind X</label>
+                        <input type="range" id="wind-x" min="-20" max="20" step="1">
+                        <span class="value-display" id="wind-x-value"></span>
+                    </div>
+                    <div class="setting-row">
+                        <label for="wind-z">Wind Z</label>
+                        <input type="range" id="wind-z" min="-20" max="20" step="1">
+                        <span class="value-display" id="wind-z-value"></span>
+                    </div>
+                    <div class="color-grid">
+                        <div class="color-row">
+                            <label for="particle-color">Particle Color</label>
+                            <input type="color" id="particle-color">
+                        </div>
+                    </div>
+                </div>
+            </details>
+
+            <!-- Presets Section -->
+            <details class="section">
+                <summary>Presets</summary>
+                <div class="section-content">
+                    <div class="preset-buttons" id="preset-buttons">
+                        <!-- Populated dynamically from Rust: Chalk | Natural | Custom -->
+                    </div>
+                </div>
+            </details>
+
+            <!-- Controls Section -->
+            <details class="section" open>
+                <summary>Controls</summary>
+                <div class="section-content">
+                    <ul class="controls-list">
+                        <li><strong>Click</strong> - Change angle</li>
+                        <li><strong>WASD / IJKL</strong> - Move</li>
+                        <li><strong>Q/E / U/O</strong> - Rotate left/right</li>
+                        <li><strong>Mouse</strong> - Look around</li>
+                        <li><strong>Space</strong> - Move up</li>
+                        <li><strong>Shift</strong> - Move down</li>
+                        <li><strong>Esc</strong> - Release mouse</li>
+                        <li><strong>R</strong> - Regenerate terrain</li>
+                        <li><strong>Tab</strong> - Collapse/hide settings</li>
+                    </ul>
+                </div>
+            </details>
+        </div>
+        <div class="panel-hint">Press Esc to release mouse and access settings</div>
+        <div class="panel-actions">
+            <button id="apply-settings">Apply</button>
+            <button id="reset-settings">Regenerate</button>
+        </div>
+    </div>
+    <div id="error"></div>
+    <script type="module" src="main.ts"></script>
+</body>
+</html>

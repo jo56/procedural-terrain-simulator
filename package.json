@@ -1,0 +1,17 @@
+{
+  "name": "procedural-terrain-simulator",
+  "version": "0.0.1",
+  "type": "module",
+  "scripts": {
+    "wasm:dev": "wasm-pack build --target web --dev",
+    "wasm:release": "wasm-pack build --target web --release",
+    "dev": "npm run wasm:dev && vite",
+    "build": "npm run wasm:release && vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "wasm-pack": "^0.13.1",
+    "vite": "^5.4.11",
+    "typescript": "^5.6.3"
+  }
+}
